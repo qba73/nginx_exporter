@@ -1,2 +1,3 @@
 # nginx_exporter
-NGINX Exporter for Prometheus
+NGINX (OSS) Exporter for Prometheus
+
