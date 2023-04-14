@@ -8,10 +8,10 @@ import (
 	nginx "github.com/qba73/nginx_exporter"
 )
 
-func TestParseStats_ParsesStatsOnValidInput(t *testing.T) {
+func TestParseStats_CorrectlyParsesStatisticsOnValidInput(t *testing.T) {
 	t.Parallel()
 
-	got, err := nginx.ParseStats(strings.NewReader(valid_stats_data))
+	got, err := nginx.ParseStats(validStatsData)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -30,9 +30,19 @@ func TestParseStats_ParsesStatsOnValidInput(t *testing.T) {
 	}
 }
 
+func TestParseStats_ReturnsErrorOnInvalidInput(t *testing.T) {
+	t.Parallel()
+
+	_, err := nginx.ParseStats(invalidStatsData)
+	if err == nil {
+		t.Fatal()
+	}
+}
+
 var (
-	valid_stats_data = `Active connections: 291
+	validStatsData = strings.NewReader(`Active connections: 291
 server accepts handled requests
  16630948 16630948 31070465
-Reading: 6 Writing: 179 Waiting: 106`
+Reading: 6 Writing: 179 Waiting: 106`)
+	invalidStatsData = strings.NewReader(`bogus data`)
 )

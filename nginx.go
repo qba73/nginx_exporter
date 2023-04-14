@@ -11,7 +11,7 @@ server accepts handled requests
  %d %d %d
 Reading: %d Writing: %d Waiting: %d`
 
-// Connections represents connections statistics returned by NGINX OSS.
+// Connections represents NGINX OSS connection statistics.
 type Connections struct {
 	// The current number of active client connections including Waiting connections.
 	Active int
@@ -29,14 +29,10 @@ type Connections struct {
 	Waiting int
 }
 
-// ParseStats takes a reader and returns parsed server statistics (connections).
+// ParseStats takes a reader and returns server statistics (connections).
 func ParseStats(r io.Reader) (Connections, error) {
-	b, err := io.ReadAll(r)
-	if err != nil {
-		return Connections{}, err
-	}
 	var active, accepted, handled, requests, reading, writing, waiting int
-	_, err = fmt.Sscanf(string(b), parseFormat, &active, &accepted, &handled, &requests, &reading, &writing, &waiting)
+	_, err := fmt.Fscanf(r, parseFormat, &active, &accepted, &handled, &requests, &reading, &writing, &waiting)
 	if err != nil {
 		return Connections{}, err
 	}
